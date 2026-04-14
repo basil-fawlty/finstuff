@@ -111,13 +111,60 @@ When the outside fund uses real-gains taxation, higher inflation *reduces* the o
 
 ---
 
+## Inheritance Rules (פטור בירושה)
+
+### Inside the Wrapper — Tikun 190
+
+The inheritance treatment depends on the **age of the account holder at death** and the **heir's choice** of how to receive the funds.
+
+**Death before age 75 — full exemption:**
+Heirs may withdraw the entire accumulated balance (principal + all gains) fully tax-free. Alternatively, they may transfer the balance to a provident fund account in their own name without triggering a tax event — the tax event is deferred to the day they actually withdraw.
+
+**Death at age 75 or later — reduced rate:**
+Heirs may withdraw as a lump sum at **15% on the nominal gain** (the same rate as the original account holder). Alternatively, heirs aged 60+ may convert the balance to a monthly annuity, which is **tax-free for life**. The heir does not need to prove minimum pension income — the minimum-pension condition applied only to the original depositor.
+
+**The 90-day rule:**
+In both cases, the balance passes to heirs with full tax exemption (on all gains accumulated up to the date of death) for the first **90 days after death**. Any gains that accumulate after the 90-day window are subject to 25% tax on real gains. Heirs should act quickly — transfer or withdraw within 90 days to preserve the favourable tax treatment on the full accumulated gain.
+
+**Transfer without tax event:**
+At any age of the deceased, heirs can transfer the funds to a new provident fund account in their own name without that transfer being treated as a tax event. Tax is deferred until the heir eventually withdraws.
+
+### Outside the Wrapper — Taxable Account
+
+Israeli tax law does **not** provide a step-up in cost basis at death for taxable investment accounts (unlike US law). Death is **not** a taxable event for the outside account — no tax is triggered when the position passes to the heir. However, the heir also receives **no basis reset**: they inherit the original purchase price as their cost basis, and will owe capital gains tax on the full accumulated gain (from the original purchase date) when they eventually sell.
+
+This has an important implication for the estate comparison:
+
+- **Wrapper (death before 75, or heir transfers to deferred account):** terminal tax = 0 on transfer. The tax clock resets only if the heir later withdraws cash.
+- **Wrapper (death at 75+, heir withdraws cash):** terminal tax = 15% on nominal gain at withdrawal.
+- **Outside account:** no tax at death, but the heir inherits the full unrealised gain at the original cost basis. The 25% tax on real gains is merely **deferred**, not forgiven.
+
+The true estate advantage of the wrapper is therefore not a simple comparison of "wrapper pays 0%, outside pays 25% now." The correct framing is: the wrapper **eliminates the liability** (before 75) or reduces it to 15% nominal (after 75), while the outside account **defers** a 25% real-gains liability to the heir. The present value of that deferred outside liability depends on when the heir eventually sells — if they hold for many more decades, the outside deferral has real value too.
+
+| Scenario | Wrapper terminal tax | Outside terminal tax |
+|---|---|---|
+| Death before 75, heir withdraws cash | 0% | 0% now — but heir owes 25% real when they sell |
+| Death before 75, heir transfers to deferred account | 0% (deferred further) | 0% now — but heir owes 25% real when they sell |
+| Death at 75+, heir withdraws cash | 15% nominal | 0% now — heir owes 25% real when they sell |
+| Death at 75+, heir converts to annuity (age 60+) | 0% (annuity tax-free) | 0% now — heir owes 25% real when they sell |
+
+### Estate Model in the Calculator
+
+The calculator models the estate scenario as follows:
+
+- **Wrapper terminal tax**: 0 if estate-exempt (death before 75, or heir transfers), 15% nominal otherwise.
+- **Outside terminal tax in estate mode**: 0 — no tax event at death. The heir inherits the position at original cost basis; the deferred 25% liability is not modelled as a current cash outflow, because its present value depends on the heir's future holding period and discount rate.
+- **Advantage interpretation**: in estate mode, the wrapper advantage shown is the **immediate cash advantage** — what the heir receives today vs. what the outside heir receives today. The outside heir's position carries an embedded future tax liability not reflected in the current balance figure.
+
+---
+
 ## Interactive Tool
 
 All assumptions in this document are embedded as defaults in the companion calculator:
 
 **[`regime_c_tikun_190.html`](regime_c_tikun_190.html)** — open in any browser, no installation required.
 
-Sliders cover: nominal return R, wrapper tax rate τ_C, extra fee f, annual withdrawal w, portfolio turnover, inflation i, initial sum P, and horizon n. Toggles switch between inflation-adjusted withdrawals and real-gains vs. nominal-gains outside baseline. The calculator shows year-by-year tax paid, terminal liquidation tax, the rate/turnover/fee-drag breakdown, and cumulative advantage across all 30-year horizons.
+Sliders cover: nominal return R, wrapper tax rate τ_C, extra fee f, annual withdrawal w, portfolio turnover, inflation i, initial sum P, age at deposit, and horizon n. Toggles switch between inflation-adjusted withdrawals, real-gains vs. nominal-gains outside baseline, and an estate mode with three sub-options: death before 75 (full exemption), death at 75+ with heir transferring to deferred account (exempt), and death at 75+ with heir withdrawing as cash (15% nominal tax). In estate mode, the outside account terminal tax is correctly set to 0 — no tax event at death, heir inherits at original cost basis per Israeli law. The breakdown card separates rate, turnover, and estate benefits. Charts update live.
 
 ---
 
@@ -128,3 +175,6 @@ Sliders cover: nominal return R, wrapper tax rate τ_C, extra fee f, annual with
 - Quantify the contribution-deduction benefit if deposits were made from pre-tax income
 - Cross-reference with the per-account section in Chapter 3 for provider-specific fee quotes
 - Stress-test at τ_B = 0% (fully tax-exempt annuity scenario) to establish the ceiling benefit
+- Model the present value of the heir's deferred outside tax liability (depends on heir's expected holding period and discount rate) to complete the estate comparison
+- Confirm the 90-day rule applies uniformly across all provident fund providers
+- Verify whether the first-tier (קצבה מזכה) and second-tier (קצבה מוכרת) have identical inheritance treatment or differ
