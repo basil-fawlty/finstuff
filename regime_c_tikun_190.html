@@ -1,0 +1,355 @@
+
+<style>
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+.grid{display:grid;grid-template-columns:1fr;gap:10px;margin:1.25rem 0;}
+.row{display:flex;align-items:center;gap:12px;}
+label.lbl{font-size:13px;color:var(--color-text-secondary);min-width:185px;}
+.val-out{font-size:14px;font-weight:500;min-width:76px;text-align:right;color:var(--color-text-primary);}
+input[type=range]{flex:1;}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1rem;}
+.card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.85rem 1rem;}
+.card-label{font-size:12px;color:var(--color-text-secondary);margin:0 0 5px;}
+.card-val{font-size:18px;font-weight:500;margin:0;color:var(--color-text-primary);}
+.card-sub{font-size:11px;color:var(--color-text-tertiary);margin:3px 0 0;}
+.verdict{padding:10px 13px;border-radius:var(--border-radius-md);font-size:13px;margin-bottom:1.25rem;}
+.verdict.win{background:var(--color-background-success);color:var(--color-text-success);}
+.verdict.lose{background:var(--color-background-danger);color:var(--color-text-danger);}
+.toggle-row{display:flex;align-items:center;gap:8px;margin:0.35rem 0;}
+.toggle-row label{font-size:13px;color:var(--color-text-secondary);cursor:pointer;}
+input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--color-text-primary);}
+.chart-label{font-size:12px;color:var(--color-text-secondary);margin:1.25rem 0 5px;}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary);}
+.legend span{display:flex;align-items:center;gap:5px;}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block;}
+.breakdown{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem 1.25rem;margin-bottom:1rem;}
+.breakdown-title{font-size:12px;color:var(--color-text-secondary);margin:0 0 10px;}
+.breakdown-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+.breakdown-row:last-child{border-bottom:none;font-weight:500;font-size:14px;padding-top:8px;}
+.breakdown-row span:first-child{color:var(--color-text-secondary);}
+.breakdown-row span:last-child{font-family:var(--font-mono);color:var(--color-text-primary);}
+.pos{color:var(--color-text-success)!important;}
+.neg{color:var(--color-text-danger)!important;}
+.section-title{font-size:11px;font-weight:500;letter-spacing:0.06em;color:var(--color-text-tertiary);text-transform:uppercase;margin:1.5rem 0 0.5rem;}
+.eq-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);padding:1rem 1.25rem;margin-top:1.5rem;}
+.eq-box-title{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 0.75rem;}
+.eq-section{margin-bottom:0.85rem;}
+.eq-section:last-child{margin-bottom:0;}
+.eq-section-label{font-size:11px;color:var(--color-text-tertiary);margin:0 0 4px;}
+.eq{font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);line-height:1.9;}
+.eq-dim{color:var(--color-text-tertiary);}
+.eq-divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:0.75rem 0;}
+</style>
+
+<h2 class="sr-only">Regime C — Tikun 190 calculator with model equations at the bottom</h2>
+
+<p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 1rem;">תיקון 190 · קופת גמל — reduced rate on nominal gain, turnover tax-free inside, deferred to withdrawal</p>
+
+<p class="section-title">Parameters</p>
+<div class="grid">
+  <div class="row"><label class="lbl">Nominal return R</label><input type="range" min="2" max="12" step="0.1" value="7" id="ret"><span class="val-out" id="ret-o">7.0%/yr</span></div>
+  <div class="row"><label class="lbl">Wrapper tax rate τ<sub>C</sub></label><input type="range" min="0" max="25" step="1" value="15" id="tax"><span class="val-out" id="tax-o">15%</span></div>
+  <div class="row"><label class="lbl">Extra wrapper fee f</label><input type="range" min="0" max="2" step="0.05" value="0.25" id="fee"><span class="val-out" id="fee-o">0.25%/yr</span></div>
+  <div class="row"><label class="lbl">Annual withdrawal w</label><input type="range" min="0" max="10" step="0.1" value="4" id="wd"><span class="val-out" id="wd-o">4.0%/yr</span></div>
+  <div class="row"><label class="lbl">Portfolio turnover</label><input type="range" min="0" max="100" step="5" value="10" id="turn"><span class="val-out" id="turn-o">10%/yr</span></div>
+  <div class="row"><label class="lbl">Inflation i</label><input type="range" min="0" max="8" step="0.1" value="2.5" id="inf"><span class="val-out" id="inf-o">2.5%/yr</span></div>
+  <div class="row"><label class="lbl">Initial sum P</label><input type="range" min="1" max="20" step="0.5" value="1" id="sum"><span class="val-out" id="sum-o">1.0M ₪</span></div>
+  <div class="row"><label class="lbl">Horizon n</label><input type="range" min="1" max="30" step="1" value="20" id="yrs"><span class="val-out" id="yrs-o">20 yr</span></div>
+</div>
+
+<p class="section-title">Outside baseline</p>
+<div class="toggle-row">
+  <input type="checkbox" id="adj-toggle" checked>
+  <label for="adj-toggle">Inflation-adjusted withdrawals (real spending power kept constant)</label>
+</div>
+<div class="toggle-row">
+  <input type="checkbox" id="real-toggle">
+  <label for="real-toggle">Outside taxed on <strong>real</strong> gains — 25% on inflation-adjusted gain (קרן מחקה baseline)</label>
+</div>
+
+<p class="section-title">Results</p>
+<div class="cards">
+  <div class="card"><p class="card-label" id="nom-label">Outside total</p><p class="card-val" id="nom-val">—</p><p class="card-sub" id="nom-sub">—</p></div>
+  <div class="card"><p class="card-label">Regime C (190) total</p><p class="card-val" id="wrap-val">—</p><p class="card-sub" id="wrap-sub">—</p></div>
+  <div class="card"><p class="card-label">Net advantage</p><p class="card-val" id="diff-val">—</p><p class="card-sub" id="diff-sub">—</p></div>
+</div>
+
+<p class="section-title">Tax paid</p>
+<div class="cards">
+  <div class="card"><p class="card-label" id="nom-tax-label">Total tax — outside</p><p class="card-val" id="nom-tax">—</p><p class="card-sub" id="nom-tax-sub">—</p></div>
+  <div class="card"><p class="card-label">Total tax — Regime C</p><p class="card-val" id="wrap-tax">—</p><p class="card-sub" id="wrap-tax-sub">—</p></div>
+  <div class="card"><p class="card-label">Tax saved (gross)</p><p class="card-val" id="tax-saved">—</p><p class="card-sub">gross, before fee drag</p></div>
+</div>
+
+<div class="breakdown">
+  <p class="breakdown-title">Why tax saved ≠ net advantage</p>
+  <div class="breakdown-row"><span>Rate reduction benefit</span><span id="bd-rate">—</span></div>
+  <div class="breakdown-row"><span>Turnover deferral benefit</span><span id="bd-turn">—</span></div>
+  <div class="breakdown-row"><span>Fee drag cost (wrapper grows at R−f)</span><span class="neg" id="bd-fee-drag">—</span></div>
+  <div class="breakdown-row"><span>Net advantage</span><span id="bd-net">—</span></div>
+</div>
+
+<div class="verdict" id="verdict"></div>
+
+<p class="chart-label">Annual tax paid — withdrawal + turnover (liquidation excluded)</p>
+<div class="legend">
+  <span><i style="background:#A32D2D;"></i><span id="legend-outside">Outside</span></span>
+  <span><i style="background:#0F6E56;"></i>Regime C (190) τ<sub>C</sub></span>
+  <span><i style="background:rgba(55,138,221,0.65);"></i>Tax saved</span>
+</div>
+<div style="position:relative;height:260px;">
+  <canvas id="chart-tax" role="img" aria-label="Annual tax paid outside vs Regime C">Annual tax paid by year.</canvas>
+</div>
+
+<p class="chart-label">Terminal liquidation tax (year <span id="term-year">—</span>)</p>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1rem;">
+  <div class="card"><p class="card-label" id="term-nom-label">Outside</p><p class="card-val" id="term-nom">—</p></div>
+  <div class="card"><p class="card-label">Regime C (190)</p><p class="card-val" id="term-wrap">—</p></div>
+  <div class="card"><p class="card-label">Tax saved at liquidation</p><p class="card-val" id="term-saved">—</p></div>
+</div>
+
+<p class="chart-label" style="margin-top:1.25rem;">Cumulative advantage by horizon</p>
+<div style="position:relative;height:200px;">
+  <canvas id="chart-adv" role="img" aria-label="Cumulative Regime C advantage over outside by holding period">Cumulative advantage by year.</canvas>
+</div>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin-top:0.75rem;">Inside wrapper: all turnover gains deferred to withdrawal/liquidation, taxed at τ<sub>C</sub> on full nominal gain since original deposit P. Outside: turnover realises gains immediately, basis steps up. Values in real ₪ when inflation-adjusted mode is on.</p>
+
+<p class="section-title" style="margin-top:2rem;">Model equations</p>
+<div class="eq-box">
+  <p class="eq-box-title">Each year t = 1 … n</p>
+
+  <div class="eq-section">
+    <p class="eq-section-label">Growth</p>
+    <div class="eq">B_outside(t) = B(t−1) × (1 + R)</div>
+    <div class="eq">B_wrapper(t) = B(t−1) × (1 + R − f)</div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Turnover tax — outside only (inside wrapper: no event)</p>
+    <div class="eq" id="eq-turn">tax_turn = (B − basis) × turn × τ_out &nbsp;<span class="eq-dim">[nominal gain]</span></div>
+    <div class="eq">basis_new = basis × (1−turn) + (B×turn − tax_turn) &nbsp;<span class="eq-dim">[step-up]</span></div>
+    <div class="eq">B = B − tax_turn</div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Withdrawal amount</p>
+    <div class="eq" id="eq-wd">w_t = w × (1 + i)^(t−1) / (1 + R) &nbsp;<span class="eq-dim">[inflation-adjusted]</span></div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Withdrawal tax</p>
+    <div class="eq" id="eq-gain-out">gain_outside = max(0, B − basis) × w_t &nbsp;<span class="eq-dim">[nominal gain]</span></div>
+    <div class="eq">gain_wrapper = max(0, B − P) × w_t &nbsp;<span class="eq-dim">[since original deposit P]</span></div>
+    <div class="eq">tax_wd = gain × τ &nbsp;·&nbsp; net_wd = gross − tax_wd &nbsp;·&nbsp; basis × (1 − w_t)</div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Terminal liquidation (year n)</p>
+    <div class="eq" id="eq-term-out">term_gain_outside = max(0, B − basis) &nbsp;<span class="eq-dim">[nominal]</span></div>
+    <div class="eq">term_gain_wrapper = max(0, B − P) &nbsp;<span class="eq-dim">[all deferred turnover gains taxed now at τ_C]</span></div>
+    <div class="eq">terminal_tax = term_gain × τ</div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Total value (real ₪ when inflation-adjusted on)</p>
+    <div class="eq">total = Σ net_wd_t / (1+i)^t  +  (B_n − terminal_tax) / (1+i)^n</div>
+  </div>
+
+  <hr class="eq-divider">
+
+  <div class="eq-section">
+    <p class="eq-section-label">Advantage decomposition</p>
+    <div class="eq">rate_benefit  = total_wrapper(turn=0) − total_outside(turn=0)</div>
+    <div class="eq">turn_benefit  = total_outside(turn=0) − total_outside(turn=T)</div>
+    <div class="eq">fee_drag      = tax_saved_gross − net_advantage</div>
+    <div class="eq">net_advantage = rate_benefit + turn_benefit − fee_drag</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function(){
+  const g=id=>document.getElementById(id);
+  const fmt=n=>Math.round(n).toLocaleString();
+  const fmtM=n=>{const v=n/1e6;return Math.abs(v)<1?(n/1e3).toFixed(0)+'k ₪':v.toFixed(2)+'M ₪';};
+  const fmtMR=n=>{const v=n/1e6;return Math.abs(v)<1?(n/1e3).toFixed(0)+'k ₪(r)':v.toFixed(2)+'M ₪(r)';};
+  const sign=n=>n>=0?'+':'';
+  const TAX_OUT=0.25;
+
+  function simulate(P,N,R,f,wBase,tauRate,mode,adj,i,turn){
+    let balance=P,basis=P,inflBasis=P,cumNet=0,cumTax=0;
+    const r=mode==='wrapper'?R-f:R;
+    const wdTax=[],turnTaxArr=[];
+    for(let t=1;t<=N;t++){
+      balance*=(1+r);
+      inflBasis*=(1+i);
+      let tTax=0;
+      if(mode!=='wrapper'&&turn>0){
+        const gainPerUnit=mode==='real_outside'?Math.max(0,balance-inflBasis):Math.max(0,balance-basis);
+        tTax=gainPerUnit*turn*tauRate;
+        const atp=balance*turn-tTax;
+        basis=basis*(1-turn)+atp;
+        inflBasis=inflBasis*(1-turn)+atp;
+        balance-=tTax;
+        cumTax+=tTax;
+      }
+      turnTaxArr.push(tTax);
+      const wRate=adj?wBase*Math.pow(1+i,t-1)/(1+r):wBase;
+      const wFrac=Math.min(wRate,0.999);
+      let taxWd=0;
+      if(wFrac>0){
+        const gross=balance*wFrac;
+        const gain=mode==='real_outside'?Math.max(0,balance-inflBasis)*wFrac:Math.max(0,balance-basis)*wFrac;
+        taxWd=gain*tauRate;
+        const netWd=gross-taxWd;
+        cumNet+=adj?netWd/Math.pow(1+i,t):netWd;
+        cumTax+=taxWd;
+        balance-=gross;
+        basis*=(1-wFrac);
+        inflBasis*=(1-wFrac);
+      }
+      wdTax.push(taxWd);
+    }
+    const fg=mode==='real_outside'?Math.max(0,balance-inflBasis):Math.max(0,balance-basis);
+    const terminalTax=fg*tauRate;
+    const terminalReal=adj?(balance-terminalTax)/Math.pow(1+i,N):(balance-terminalTax);
+    cumTax+=terminalTax;
+    return{cumNet,terminalNet:terminalReal,total:cumNet+terminalReal,cumTax,wdTax,turnTaxArr,terminalTax};
+  }
+
+  let chartTax,chartAdv;
+
+  function calc(){
+    const R=+g('ret').value/100,tB=+g('tax').value/100,f=+g('fee').value/100;
+    const wBase=+g('wd').value/100,i=+g('inf').value/100;
+    const Pm=+g('sum').value,P=Pm*1e6,N=+g('yrs').value;
+    const turn=+g('turn').value/100;
+    const adj=g('adj-toggle').checked,realOut=g('real-toggle').checked;
+    const outsideMode=realOut?'real_outside':'nominal_outside';
+
+    g('ret-o').textContent=(R*100).toFixed(1)+'%/yr';
+    g('tax-o').textContent=(tB*100).toFixed(0)+'%';
+    g('fee-o').textContent=(f*100).toFixed(2)+'%/yr';
+    g('wd-o').textContent=(wBase*100).toFixed(1)+'%/yr';
+    g('turn-o').textContent=(turn*100).toFixed(0)+'%/yr';
+    g('inf-o').textContent=(i*100).toFixed(1)+'%/yr';
+    g('sum-o').textContent=Pm.toFixed(1)+'M ₪';
+    g('yrs-o').textContent=N+' yr';
+    g('term-year').textContent=N;
+
+    g('eq-turn').innerHTML=realOut
+      ?'tax_turn = (B − basis_infl) × turn × τ_out &nbsp;<span class="eq-dim">[real gain, basis_infl = P×(1+i)^t]</span>'
+      :'tax_turn = (B − basis) × turn × τ_out &nbsp;<span class="eq-dim">[nominal gain]</span>';
+    g('eq-gain-out').innerHTML=realOut
+      ?'gain_outside = max(0, B − basis_infl) × w_t &nbsp;<span class="eq-dim">[real gain]</span>'
+      :'gain_outside = max(0, B − basis) × w_t &nbsp;<span class="eq-dim">[nominal gain]</span>';
+    g('eq-term-out').innerHTML=realOut
+      ?'term_gain_outside = max(0, B − basis_infl) &nbsp;<span class="eq-dim">[real]</span>'
+      :'term_gain_outside = max(0, B − basis) &nbsp;<span class="eq-dim">[nominal]</span>';
+    g('eq-wd').innerHTML=adj
+      ?'w_t = w × (1 + i)^(t−1) / (1 + R) &nbsp;<span class="eq-dim">[inflation-adjusted]</span>'
+      :'w_t = w &nbsp;<span class="eq-dim">[fixed nominal fraction]</span>';
+
+    const outsideLabel=realOut?'Outside (25% real gain)':'Outside (25% nominal gain)';
+    g('nom-label').textContent=outsideLabel+' total';
+    g('nom-tax-label').textContent='Total tax — '+outsideLabel;
+    g('term-nom-label').textContent=outsideLabel;
+    g('legend-outside').textContent=outsideLabel;
+
+    const nom=simulate(P,N,R,f,wBase,TAX_OUT,outsideMode,adj,i,turn);
+    const wrap=simulate(P,N,R,f,wBase,tB,'wrapper',adj,i,0);
+    const nomNoTurn=simulate(P,N,R,f,wBase,TAX_OUT,outsideMode,adj,i,0);
+
+    const diff=wrap.total-nom.total;
+    const taxSaved=nom.cumTax-wrap.cumTax;
+    const rateBenefit=wrap.total-nomNoTurn.total;
+    const turnBenefit=nomNoTurn.total-nom.total;
+    const feeDrag=taxSaved-diff;
+
+    const fmt2=adj?fmtMR:fmtM;
+    g('nom-val').textContent=fmt2(nom.total);
+    g('nom-sub').textContent='w/d '+fmt2(nom.cumNet)+' + term. '+fmt2(nom.terminalNet);
+    g('wrap-val').textContent=fmt2(wrap.total);
+    g('wrap-sub').textContent='w/d '+fmt2(wrap.cumNet)+' + term. '+fmt2(wrap.terminalNet);
+    g('diff-val').textContent=sign(diff)+fmt(diff)+' ₪'+(adj?' (r)':'');
+    g('diff-sub').textContent=sign(diff)+(diff/Math.max(1,nom.total)*100).toFixed(2)+'% vs outside';
+
+    const turnTotal=nom.turnTaxArr.reduce((a,b)=>a+b,0);
+    const wdTaxTotal=nom.cumTax-nom.terminalTax-turnTotal;
+    g('nom-tax').textContent=fmtM(nom.cumTax);
+    g('nom-tax-sub').textContent='turn. '+fmtM(turnTotal)+' + w/d '+fmtM(wdTaxTotal)+' + term. '+fmtM(nom.terminalTax);
+    g('wrap-tax').textContent=fmtM(wrap.cumTax);
+    g('wrap-tax-sub').textContent='w/d '+fmtM(wrap.cumTax-wrap.terminalTax)+' + term. '+fmtM(wrap.terminalTax);
+    g('tax-saved').textContent=sign(taxSaved)+fmt(taxSaved)+' ₪';
+
+    const bdRate=g('bd-rate');
+    bdRate.textContent=sign(rateBenefit)+fmt(rateBenefit)+' ₪'+(adj?' (r)':'');
+    bdRate.className=rateBenefit>=0?'pos':'neg';
+    const bdTurn=g('bd-turn');
+    bdTurn.textContent=sign(turnBenefit)+fmt(turnBenefit)+' ₪'+(adj?' (r)':'');
+    bdTurn.className=turnBenefit>=0?'pos':'neg';
+    g('bd-fee-drag').textContent='−'+fmt(Math.abs(feeDrag))+' ₪';
+    const bdNet=g('bd-net');
+    bdNet.textContent=sign(diff)+fmt(diff)+' ₪'+(adj?' (r)':'');
+    bdNet.className=diff>=0?'pos':'neg';
+
+    const v=g('verdict');
+    if(diff>=0){v.className='verdict win';v.textContent='Regime C wins — rate reduction + turnover deferral exceed fee drag.';}
+    else{v.className='verdict lose';v.textContent='Fee drag exceeds combined benefits at this horizon.';}
+
+    g('term-nom').textContent=fmtM(nom.terminalTax);
+    g('term-wrap').textContent=fmtM(wrap.terminalTax);
+    const termSaved=nom.terminalTax-wrap.terminalTax;
+    g('term-saved').textContent=sign(termSaved)+fmtM(termSaved);
+
+    const labels=Array.from({length:N},(_,k)=>k+1);
+    const nomAnn=nom.wdTax.slice(0,N).map((v,k)=>Math.round(v+nom.turnTaxArr[k]));
+    const wrapAnn=wrap.wdTax.slice(0,N).map(Math.round);
+    const savedYr=nomAnn.map((v,k)=>Math.round(v-wrapAnn[k]));
+
+    if(!chartTax){
+      chartTax=new Chart(g('chart-tax'),{type:'bar',data:{labels,datasets:[
+        {label:outsideLabel,data:nomAnn,backgroundColor:'#A32D2D',borderWidth:0},
+        {label:'Regime C (190)',data:wrapAnn,backgroundColor:'#0F6E56',borderWidth:0},
+        {label:'Tax saved',data:savedYr,backgroundColor:'rgba(55,138,221,0.65)',borderWidth:0}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' ₪'}}},scales:{x:{title:{display:true,text:'Year'},grid:{display:false},ticks:{autoSkip:true,maxTicksLimit:15,font:{size:11}}},y:{title:{display:true,text:'Tax paid (₪)'},ticks:{callback:v=>fmt(v),font:{size:11}}}}}});
+    }else{
+      chartTax.data.labels=labels;
+      chartTax.data.datasets[0].label=outsideLabel;
+      chartTax.data.datasets[0].data=nomAnn;
+      chartTax.data.datasets[1].data=wrapAnn;
+      chartTax.data.datasets[2].data=savedYr;
+      chartTax.update('none');
+    }
+
+    const advData=[],advColors=[];
+    for(let h=1;h<=30;h++){
+      const d=simulate(P,h,R,f,wBase,tB,'wrapper',adj,i,0).total
+             -simulate(P,h,R,f,wBase,TAX_OUT,outsideMode,adj,i,turn).total;
+      advData.push(Math.round(d));
+      advColors.push(d>=0?'#0F6E56':'#A32D2D');
+    }
+    if(!chartAdv){
+      chartAdv=new Chart(g('chart-adv'),{type:'bar',data:{labels:Array.from({length:30},(_,k)=>k+1),datasets:[{data:advData,backgroundColor:advColors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>'Year '+c[0].label,label:c=>sign(c.parsed.y)+fmt(c.parsed.y)+(adj?' ₪(r)':' ₪')}}},scales:{x:{title:{display:true,text:'Holding period (years)'},grid:{display:false},ticks:{autoSkip:false,maxRotation:0,font:{size:11}}},y:{title:{display:true,text:'Advantage'+(adj?' (real ₪)':' (₪)')},ticks:{callback:v=>fmt(v),font:{size:11}}}}}});
+    }else{
+      chartAdv.data.datasets[0].data=advData;
+      chartAdv.data.datasets[0].backgroundColor=advColors;
+      chartAdv.options.scales.y.title.text='Advantage'+(adj?' (real ₪)':' (₪)');
+      chartAdv.update('none');
+    }
+  }
+
+  ['ret','tax','fee','wd','turn','inf','sum','yrs'].forEach(id=>g(id).addEventListener('input',calc));
+  ['adj-toggle','real-toggle'].forEach(id=>g(id).addEventListener('change',calc));
+  calc();
+})();
+</script>
